@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package ru.otus.protobuf.generated;
+
+option java_multiple_files = true;
+option java_package = "ru.otus.grpc.protobuf.generated";
+option java_outer_classname = "NumberServiceProto";
+
+service NumberService {
+    rpc provideNumbers(NumberRequest) returns (stream NumberResponse);
+}
+
+message NumberRequest {
+    int64 firstValue = 1;
+    int64 lastValue = 2;
+}
+
+message NumberResponse {
+    int64 value = 1;
+}
