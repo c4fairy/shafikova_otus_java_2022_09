@@ -21,21 +21,19 @@ public class GRPCClient {
                 .usePlaintext()
                 .build();
 
-        if (channel != null) {
-            var asyncStub = NumberServiceGrpc.newStub(channel);
-            var numberRequest = generateRequest(1, 30);
+        var asyncStub = NumberServiceGrpc.newStub(channel);
+        var numberRequest = generateRequest(1, 30);
 
-            var clientStreamObserver = new ClientStreamObserver();
-            var client = new GrpcClient();
-            asyncStub.provideNumbers(numberRequest, clientStreamObserver);
+        var clientStreamObserver = new ClientStreamObserver();
+        var client = new GrpcClient();
+        asyncStub.provideNumbers(numberRequest, clientStreamObserver);
 
-            for (int i = 0; i < REPEAT_LIMIT; i++) {
-                sleep();
-                client.currentValue = client.getNextValue(clientStreamObserver);
-                LOG.info("Client current value: {}", client.getCurrentValue());
-            }
-            channel.shutdown();
+        for (int i = 0; i < REPEAT_LIMIT; i++) {
+            sleep();
+            client.currentValue = client.getNextValue(clientStreamObserver);
+            LOG.info("Client current value: {}", client.getCurrentValue());
         }
+        channel.shutdown();
     }
 
     private long getNextValue(ClientStreamObserver clientStreamObserver) {
