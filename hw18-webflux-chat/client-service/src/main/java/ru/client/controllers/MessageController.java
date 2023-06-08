@@ -47,13 +47,11 @@ public class MessageController {
     @SendTo({TOPIC_TEMPLATE + "{roomId}", TOPIC_SEE_ALL})
     public Message getMessage(@DestinationVariable String roomId, Message message) {
         logger.info("got message:{}, roomId:{}", message, roomId);
-        if (ROOM_ID_SEE_ALL.equals(roomId)) {
-            logger.info("cannot send message from this room");
-            return null;
-        } else {
+        if (!ROOM_ID_SEE_ALL.equals(roomId)) {
             saveMessage(roomId, message).subscribe(msgId -> logger.info("message send id:{}", msgId));
-            return new Message(HtmlUtils.htmlEscape(message.messageStr()));
+            message = new Message(HtmlUtils.htmlEscape(message.messageStr()));
         }
+        return message;
     }
 
 
